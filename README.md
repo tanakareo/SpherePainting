@@ -25,8 +25,8 @@
 ### ツールバー
 | アイコン | 説明 |
 |:---|:---|
-| <img src="https://github.com/user-attachments/assets/7900df43-c588-47fc-bf5b-8dc7988a0c8e" width="100px vertical-align:bottom"> | モードの切り替えを行います。左が編集モード、右がキャンバスモードです。 |
-| <img src="https://github.com/user-attachments/assets/0a2033bc-9322-4242-b94c-1921a00ab7d2" width="100px vertical-align:bottom"> | ギズモの表示を設定します。右の下矢印からギズモの透明度など詳細な設定ができます。 |
+| <img src="https://github.com/user-attachments/assets/7900df43-c588-47fc-bf5b-8dc7988a0c8e" width="150px vertical-align:bottom"> | モードの切り替えを行います。左が編集モード、右がキャンバスモードです。 |
+| <img src="https://github.com/user-attachments/assets/0a2033bc-9322-4242-b94c-1921a00ab7d2" width="150px vertical-align:bottom"> | ギズモの表示を設定します。右の下矢印からギズモの透明度など詳細な設定ができます。 |
 ## 操作方法
 ### 視点操作
 | 操作 | 機能 |
