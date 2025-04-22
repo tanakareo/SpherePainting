@@ -1,0 +1,51 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/SpherePainting.uss?fileID=7433441132597879392&amp;guid=a5443fa628d36ed4dabe726d802fd4d4&amp;type=3#SpherePainting" />
+    <engine:VisualElement name="sphere-render-setting" class="sidebar-content-container">
+        <engine:VisualElement name="sphere-render-setting__header" class="header">
+            <engine:Label text="球のレンダリング" />
+        </engine:VisualElement>
+        <engine:ScrollView name="sphere-render-setting__scroll-view">
+            <engine:VisualElement class="setting-block">
+                <engine:Toggle label="裏面を表示" name="display-sphere-back-face-toggle" class="setting-variable" />
+            </engine:VisualElement>
+            <engine:Foldout text="球の質感" name="sphere-material-foldout" class="setting-block">
+                <SpherePainting.SliderInt label="シード値" value="0.5" fill="true" name="sphere-material-seed-slider-int" high-value="100000" low-value="1" class="slider setting-variable" />
+                <engine:Foldout text="球の色の範囲" name="sphere-material-color-range-foldout" value="false" class="setting-block">
+                    <SpherePainting.MinMaxSlider label="色相" value="0,255" high-limit="255" low-limit="0" name="material-color-hue-range-min-max-slider" m_-is-integer="true" class="min-max-slider setting-variable" />
+                    <SpherePainting.MinMaxSlider label="彩度" value="0,255" high-limit="255" low-limit="0" name="material-color-saturation-range-min-max-slider" m_-is-integer="true" class="min-max-slider setting-variable" />
+                    <SpherePainting.MinMaxSlider label="明度" value="0,255" high-limit="255" low-limit="0" name="material-color-value-range-min-max-slider" m_-is-integer="true" class="min-max-slider setting-variable" />
+                    <SpherePainting.MinMaxSlider label="不透明度" value="0,255" high-limit="255" low-limit="0" name="material-color-opacity-range-min-max-slider" m_-is-integer="true" class="min-max-slider setting-variable" />
+                    <SpherePainting.MinMaxSlider label="演算対象の球の不透明度" value="0,255" high-limit="255" low-limit="0" name="operation-target-material-color-opacity-range-min-max-slider" m_-is-integer="true" class="min-max-slider setting-variable" />
+                </engine:Foldout>
+                <SpherePainting.Slider fill="true" label="透明な演算対象の球の割合" name="transparent-operation-target-ratio-slider" high-value="1" low-value="0" class="slider setting-variable" />
+                <SpherePainting.MinMaxSlider label="演算対象の球の質感のランダム" low-limit="0" name="operation-target-material-randomness-range-min-max-slider" value="1,1" high-limit="1" class="setting-variable min-max-slider" />
+                <SpherePainting.MinMaxSlider label="演算箇所の質感のランダム" low-limit="0" name="operation-area-material-randomness-range-min-max-slider" value="1,1" high-limit="1" class="setting-variable min-max-slider" />
+                <engine:Foldout text="色のブレンドモードの割合" name="color-blend-mode-weights-foldout" class="setting-block">
+                    <SpherePainting.Slider label="標準" high-value="1" fill="true" name="normal-blend-mode-weight-slider" class="setting-variable slider" />
+                    <SpherePainting.Slider label="乗算" high-value="1" fill="true" name="multiply-blend-mode-weight-slider" class="setting-variable slider" />
+                    <SpherePainting.Slider label="オーバーレイ" high-value="1" fill="true" name="overlay-blend-mode-weight-slider" class="setting-variable slider" />
+                    <SpherePainting.Slider label="加算" high-value="1" fill="true" name="add-blend-mode-weight-slider" class="setting-variable slider" />
+                    <SpherePainting.Slider label="加算(発光)" high-value="1" fill="true" name="add-glow-blend-mode-weight-slider" class="setting-variable slider" />
+                    <SpherePainting.Slider label="差分" high-value="1" fill="true" name="difference-blend-mode-weight-slider" class="setting-variable slider" />
+                    <SpherePainting.Slider label="排他" high-value="1" fill="true" name="exclusion-blend-mode-weight-slider" class="setting-variable slider" />
+                    <SpherePainting.Slider label="色相" high-value="1" fill="true" name="hue-blend-mode-weight-slider" class="setting-variable slider" />
+                    <SpherePainting.Slider label="彩度" high-value="1" fill="true" name="saturation-blend-mode-weight-slider" class="setting-variable slider" />
+                    <SpherePainting.Slider label="色" high-value="1" fill="true" name="color-blend-mode-weight-slider" class="setting-variable slider" />
+                    <SpherePainting.Slider label="輝度" high-value="1" fill="true" name="luminosity-blend-mode-weight-slider" class="setting-variable slider" />
+                </engine:Foldout>
+            </engine:Foldout>
+            <engine:Foldout text="ブレンド" name="blend-foldout" value="false" class="setting-block">
+                <engine:Foldout text="形状のブレンド" name="blend-strength-foldout" value="false" class="setting-block">
+                    <SpherePainting.Slider label="球同士のブレンド" value="0.5" fill="true" name="sphere-blend-strength-slider" class="setting-variable slider" />
+                    <SpherePainting.Slider label="演算対象の球同士のブレンド" value="0.5" fill="true" name="operation-target-blend-strength-slider" class="setting-variable slider" />
+                    <SpherePainting.Slider label="演算の滑らかさ" value="0.5" fill="true" name="operation-smoothness-slider" class="setting-variable slider" />
+                </engine:Foldout>
+                <engine:Foldout text="質感のブレンド" name="material-blend-strength-foldout" value="false" class="setting-block">
+                    <SpherePainting.Slider label="球同士のブレンド" value="0.5" fill="true" name="sphere-material-blend-strength-slider" high-value="1" class="slider setting-variable" />
+                    <SpherePainting.Slider label="演算対象の球同士のブレンド" value="0.5" fill="true" name="operation-target-material-blend-strength-slider" high-value="1" class="slider setting-variable" />
+                    <SpherePainting.Slider label="演算の滑らかさ" value="0.5" fill="true" name="operation-material-smoothness-slider" high-value="1" class="slider setting-variable" />
+                </engine:Foldout>
+            </engine:Foldout>
+        </engine:ScrollView>
+    </engine:VisualElement>
+</engine:UXML>

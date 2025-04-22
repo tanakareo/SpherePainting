@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99a74e1f4424151458a64238b0c9ce5b, type: 3}
+  m_Name: RectangleCanvasMesh
+  m_EditorClassIdentifier: 
+  <BaseMesh>k__BackingField: {fileID: -4454584625805849049, guid: afa40287bf254ef418eb1f1e815ea75f, type: 3}
+  <LayerMesh>k__BackingField: {fileID: -5270480606934443255, guid: 3c2ebc713f6ec674397873dc713bcc3c, type: 3}

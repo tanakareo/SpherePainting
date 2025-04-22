@@ -1,0 +1,38 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/SpherePainting.uss?fileID=7433441132597879392&amp;guid=a5443fa628d36ed4dabe726d802fd4d4&amp;type=3#SpherePainting" />
+    <engine:VisualElement name="file-setting" class="sidebar-content-container">
+        <engine:VisualElement name="file-setting__header" class="header">
+            <engine:Label text="ファイル" />
+        </engine:VisualElement>
+        <engine:ScrollView name="file-setting__scroll-view">
+            <engine:Foldout text="開く" class="setting-block">
+                <engine:Button text="プロジェクトを開く" name="load-data-button" class="setting-variable button" />
+                <engine:Button text="新規プロジェクトを開く" name="load-new-data-button" class="setting-variable button" />
+                <engine:Button text="前回のプロジェクトを開く" name="load-previous-data-button" class="setting-variable button" />
+            </engine:Foldout>
+            <engine:Foldout text="保存" class="setting-block">
+                <engine:VisualElement class="setting-block">
+                    <engine:Toggle label="自動保存" name="enable-auto-save-toggle" class="setting-variable" />
+                    <engine:FloatField label="保存間隔（分）" name="auto-save-interval-unit-float-field" value="5" class="setting-variable" />
+                    <engine:IntegerField label="保存するプロジェクトの最大数" name="max-auto-save-count-integer-field" value="20" class="setting-variable" />
+                </engine:VisualElement>
+                <engine:Button text="プロジェクトを保存" name="save-data-button" class="setting-variable button" />
+            </engine:Foldout>
+            <engine:Foldout text="エクスポート" class="setting-block">
+                <engine:VisualElement style="flex-direction: row; width: 100%; overflow: hidden;">
+                    <engine:TextField placeholder-text="エクスポート先のフォルダパス" name="export-folder-path-text-field" readonly="true" class="setting-variable path-text-field" style="margin-left: 0; margin-right: 0; margin-top: 2px; margin-bottom: 0; min-width: 100px; align-self: stretch; flex-grow: 1;" />
+                    <engine:Button icon-image="project://database/Assets/UI/Icons/FolderIcon.png?fileID=2800000&amp;guid=1426e95d74c403e46bde3cda819b7e51&amp;type=3#FolderIcon" name="set-export-folder-path-button" class="setting-variable button" style="width: 25px; margin-left: 2px; max-height: 20px; min-height: 0; overflow: hidden;" />
+                </engine:VisualElement>
+                <engine:Toggle label="SVGファイルを作成" name="should-create-svg-file-toggle" class="setting-variable" />
+                <engine:Toggle label="シャッフルしたレイヤーのみ作成" name="should-create-only-shuffled-layers-toggle" class="setting-variable" />
+                <engine:Toggle label="レンダリング後自動で自動でエクスポート" name="should-auto-export-after-rendering-toggle" class="setting-variable" />
+                <engine:Button text="レンダリング結果をPNGにエクスポート" name="export-render-result-button" class="setting-variable button" style="height: 30px;" />
+                <engine:Button text="球毎にレンダリングしてPNGにエクスポート" name="render-and-export-sphere-volume-button" class="setting-variable button" style="height: 30px;" />
+                <engine:Foldout text="その他" class="setting-block">
+                    <engine:Button text="ビューポートをPNGにエクスポート" name="export-viewport-preview-button" class="setting-variable button" />
+                    <engine:Button text="キャンバスのプレビューをPNGにエクスポート" name="export-canvas-preview-button" class="setting-variable button" />
+                </engine:Foldout>
+            </engine:Foldout>
+        </engine:ScrollView>
+    </engine:VisualElement>
+</engine:UXML>

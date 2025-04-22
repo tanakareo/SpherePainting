@@ -1,0 +1,33 @@
+{
+    "name": "SpherePainting",
+    "rootNamespace": "SpherePainting",
+    "references": [
+        "GUID:77221876cc6b8244180b96e320b1bcd4",
+        "GUID:f8c68d614fe30d647996098360b5e0d5",
+        "GUID:d8b63aba1907145bea998dd612889d6b",
+        "GUID:329b4ccd385744985bf3f83cfd77dfe7",
+        "GUID:904d80dccad704a3f95e42bd0ad5d960",
+        "GUID:64e9bd8efa4c54543be7692a41725151",
+        "GUID:f4b5bb09982c10641817aa7c1af7c636",
+        "GUID:018a4538649b06c4987f03673e470692",
+        "GUID:d525ad6bd40672747bde77962f1c401e",
+        "GUID:234340c04eed5674a988bc6ebde7d248",
+        "GUID:b951cc0b3d8fde84a9154d2162aa5a70",
+        "GUID:3b570a5146f9d4f0fa107ed4559471a3",
+        "GUID:8c41f684b6199433cbfc54bfc4a1c78e",
+        "GUID:3aa1866a824b5472da50fe142777d95f",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:0220840fdbcd12e48ae64005255401f4",
+        "GUID:6de01b04fa4e14662b03fa46366da151",
+        "GUID:f19bbd83e3c264a5680926bf75d7e494"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

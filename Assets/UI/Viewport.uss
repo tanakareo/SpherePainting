@@ -1,0 +1,167 @@
+* {
+    --viewport-toggle-color--hover: rgb(100, 100, 100);
+    --viewport-toggle-color: rgb(40, 40, 40);
+    --viewport-header-toggle-color: rgb(30, 30, 30);
+    --viewport-header-toggle-color--hover: rgb(50, 50, 50);
+    --viewport-header-toggle-color--checked: rgb(100, 111, 255);
+    --viewport-header-toggle-border-color: rgb(20, 20, 20);
+    --viewport-header-toggle__text-color: rgb(220, 220, 220);
+}
+
+.viewport-toggle {
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    border-bottom-left-radius: 50%;
+    margin-left: 0;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    width: 28px;
+    height: 28px;
+    margin-top: 8px;
+}
+
+.viewport-camera-toggle #unity-checkmark {
+    background-image: url("project://database/Assets/IconTextures/CameraOutlineIcon.png?fileID=2800000&guid=8ea2cc7a6665bca4baae5f03daa41391&type=3#CameraOutlineIcon");
+}
+
+.viewport-camera-toggle:checked #unity-checkmark {
+    background-image: url("project://database/Assets/IconTextures/CameraIcon.png?fileID=2800000&guid=8213afa1c3ebbf34dbdb2f10f232ae01&type=3#CameraIcon");
+}
+
+.viewport-toggle #unity-checkmark {
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    border-top-left-radius: 40%;
+    border-top-right-radius: 40%;
+    border-bottom-right-radius: 40%;
+    border-bottom-left-radius: 40%;
+    background-size: 70% 70%;
+    transition-duration: 0.2s;
+    width: 100%;
+    height: 100%;
+    background-color: var(--viewport-toggle-color);
+}
+
+.viewport-toggle:hover #unity-checkmark {
+    transition-duration: 0.2s;
+    background-color: var(--viewport-toggle-color--hover);
+    background-size: 80% 80%;
+}
+
+.viewport-toggle-container {
+    height: 100%;
+    align-self: flex-end;
+    justify-content: center;
+}
+
+.viewport-content-container {
+    height: auto;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+}
+
+#gizmo-display-toggle #unity-checkmark {
+    display: none;
+}
+
+.viewport-header {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0);
+    flex-grow: 1;
+    width: 100%;
+    margin-top: 0;
+}
+
+.viewport-header > #toggle-container {
+    align-items: center;
+    flex-direction: row-reverse;
+    width: 100%;
+    height: 100%;
+}
+
+.viewport-header > #mode-radio-button-group {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.mode-button {
+    width: 40px;
+}
+
+.viewport-header__toggle .unity-toggle__text {
+    font-size: 12px;
+    color: var(--viewport-header-toggle__text-color);
+    -unity-text-align: middle-center;
+    width: 100%;
+}
+
+.viewport-header__toggle .unity-button-group__button:hover {
+    background-color: var(--viewport-header-toggle-color--hover);
+}
+
+.viewport-header__toggle:hover {
+    background-color: var(--viewport-header-toggle-color--hover);
+}
+
+.viewport-header__toggle-button {
+    flex-shrink: 1;
+    background-color: var(--viewport-header-toggle-color);
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    flex-grow: 1;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+}
+
+.viewport-header__toggle-button:hover {
+    background-color: var(--viewport-header-toggle-color--hover);
+}
+
+.viewport-header__toggle-button:hover:checked {
+    background-color: var(--viewport-header-toggle-color--checked);
+}
+
+.viewport-header__toggle-button:checked {
+    background-color: var(--viewport-header-toggle-color--checked);
+}
+
+#toggle-container > .viewport-header__toggle-button-group {
+    overflow: hidden;
+}
+
+.viewport-header__toggle {
+    margin-left: 0;
+    margin-right: 4px;
+    margin-top: 2px;
+    margin-bottom: 0;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-color: var(--viewport-header-toggle-border-color);
+    border-right-color: var(--viewport-header-toggle-border-color);
+    border-bottom-color: var(--viewport-header-toggle-border-color);
+    border-left-color: var(--viewport-header-toggle-border-color);
+    overflow: hidden;
+    height: 18px;
+}

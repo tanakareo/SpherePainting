@@ -1,0 +1,13 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Dropdown.uss?fileID=7433441132597879392&amp;guid=2931db8b34010f04a838c55f9c5b20ae&amp;type=3#Dropdown" />
+    <engine:VisualElement name="contents" data-source-type="UnityEngine.UIElements.Toggle, UnityEngine.UIElementsModule" class="dropdown__contents" style="border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0; width: 200px;">
+        <engine:Label text="ギズモの表示" />
+        <SpherePainting.GizmoStrengthSlider Label="カメラ" name="rendering-camera-gizmo-strength-slider" />
+        <SpherePainting.GizmoStrengthSlider Label="生成領域" name="generation-bounds-gizmo-strength-slider" />
+        <SpherePainting.GizmoStrengthSlider Label="グリッド" name="grid-gizmo-strength-slider" />
+        <SpherePainting.GizmoStrengthSlider Label="キャンバスの切り抜き" name="canvas-mask-gizmo-strength-slider" />
+        <Bindings>
+            <engine:DataBinding property="enabledSelf" data-source-path="value" binding-mode="ToTarget" />
+        </Bindings>
+    </engine:VisualElement>
+</engine:UXML>

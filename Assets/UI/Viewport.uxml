@@ -1,0 +1,39 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Dropdown.uss?fileID=7433441132597879392&amp;guid=2931db8b34010f04a838c55f9c5b20ae&amp;type=3#Dropdown" />
+    <Style src="project://database/Assets/UI/Viewport.uss?fileID=7433441132597879392&amp;guid=24388bbe328a5d549985b8c633bd0c12&amp;type=3#Viewport" />
+    <engine:VisualElement name="viewport" style="height: 100%; background-color: rgb(7, 7, 7);">
+        <engine:VisualElement name="viewport-content-container" class="viewport-content-container">
+            <engine:VisualElement name="canvas-mode-content" style="width: 100%; height: 100%; position: absolute;">
+                <engine:VisualElement name="viewport-canvas" picking-mode="Ignore" style="background-image: url(&quot;project://database/Assets/RenderTextures/CanvasRenderTexture.renderTexture?fileID=8400000&amp;guid=f269dae5194347640a2066b03857ea74&amp;type=2#CanvasRenderTexture&quot;); -unity-background-scale-mode: scale-and-crop; width: 100%; height: 100%; position: absolute;" />
+            </engine:VisualElement>
+            <engine:VisualElement name="edit-mode-content" style="position: absolute; width: 100%; height: 100%; background-color: rgb(20, 20, 20);">
+                <SpherePainting.AspectRatioPanel name="rendering-camera-content" aspect-ratio-y="1" aspect-ratio-x="1">
+                    <engine:VisualElement name="viewport-checker-background" style="position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/UI/Checker.png?fileID=2800000&amp;guid=f1acf62429fc40848a12c821d1cf136b&amp;type=3#Checker&quot;); background-size: 16px 16px; background-repeat: repeat repeat;" />
+                    <engine:VisualElement name="viewport-scene" picking-mode="Ignore" style="background-image: url(&quot;project://database/Assets/RenderTextures/MaskedViewportColorRenderTexture.renderTexture?fileID=8400000&amp;guid=be65270127dd54d4a86f478f561ebf74&amp;type=2#MaskedViewportColorRenderTexture&quot;); -unity-background-scale-mode: scale-to-fit; width: 100%; height: 100%; position: absolute;" />
+                    <engine:VisualElement name="viewport-gizmos" picking-mode="Ignore" style="background-image: url(&quot;project://database/Assets/RenderTextures/GizmoRenderTexture.renderTexture?fileID=8400000&amp;guid=76eb48edb2ee7344a8d3343a52d99c28&amp;type=2#GizmoRenderTexture&quot;); -unity-background-scale-mode: scale-to-fit; width: 100%; height: 100%; position: absolute;" />
+                </SpherePainting.AspectRatioPanel>
+                <engine:VisualElement name="viewport-camera-content" style="width: 100%; height: 100%;">
+                    <engine:VisualElement name="viewport-checker-background" style="position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/UI/Checker.png?fileID=2800000&amp;guid=f1acf62429fc40848a12c821d1cf136b&amp;type=3#Checker&quot;); background-size: 16px 16px; background-repeat: repeat repeat;" />
+                    <engine:VisualElement name="viewport-scene" picking-mode="Ignore" style="background-image: url(&quot;project://database/Assets/RenderTextures/MaskedViewportColorRenderTexture.renderTexture?fileID=8400000&amp;guid=be65270127dd54d4a86f478f561ebf74&amp;type=2#MaskedViewportColorRenderTexture&quot;); -unity-background-scale-mode: scale-and-crop; width: 100%; height: 100%; position: absolute;" />
+                    <engine:VisualElement name="viewport-gizmos" picking-mode="Ignore" style="background-image: url(&quot;project://database/Assets/RenderTextures/GizmoRenderTexture.renderTexture?fileID=8400000&amp;guid=76eb48edb2ee7344a8d3343a52d99c28&amp;type=2#GizmoRenderTexture&quot;); -unity-background-scale-mode: scale-and-crop; width: 100%; height: 100%; position: absolute;" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+            <SpherePainting.CameraControlEventReceiver name="viewport-camera-control-event-receiver" focusable="true" style="width: 100%; height: 100%; position: absolute;" />
+            <engine:VisualElement name="toggle-container" picking-mode="Ignore" class="viewport-toggle-container" style="border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;">
+                <engine:Toggle toggle-on-label-click="false" name="set-camrea-to-rendering-camera-toggle" class="viewport-toggle viewport-camera-toggle" />
+            </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:VisualElement name="viewport-header" class="viewport-header">
+            <engine:VisualElement name="toggle-container">
+                <engine:ToggleButtonGroup value="10" name="mode-toggle-button-group" allow-empty-selection="false" class="viewport-header__toggle toggle-button-group viewport-header__toggle-button-group">
+                    <engine:Button name="edit-mode-button" icon-image="project://database/Assets/UI/Icons/EditModeIcon.png?fileID=2800000&amp;guid=33a35f7a33a794a4190948d81cd198d2&amp;type=3#EditModeIcon" class="mode-button viewport-header__toggle-button" />
+                    <engine:Button name="canvas-mode-button" icon-image="project://database/Assets/UI/Icons/CanvasModeIcon.png?fileID=2800000&amp;guid=6d9510c8227264c4daf1111eb8e81b9f&amp;type=3#CanvasModeIcon" class="mode-button viewport-header__toggle-button" style="border-right-width: 0;" />
+                </engine:ToggleButtonGroup>
+                <engine:VisualElement class="viewport-header__toggle" style="width: 70px; flex-direction: row;">
+                    <engine:Toggle name="gizmo-display-toggle" text="ギズモ" toggle-on-label-click="false" value="false" class="viewport-header__toggle-button" />
+                    <SpherePainting.GizmoDropdownToggle name="gizmo-dropdown-toggle" class="dropdown-toggle viewport-header__toggle-button" style="border-right-width: 0;" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

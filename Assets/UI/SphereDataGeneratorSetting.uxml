@@ -1,0 +1,40 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/SpherePainting.uss?fileID=7433441132597879392&amp;guid=a5443fa628d36ed4dabe726d802fd4d4&amp;type=3#SpherePainting" />
+    <engine:VisualElement name="sphere-generator-setting" class="sidebar-content-container">
+        <engine:VisualElement name="sphere-generator__header" class="header">
+            <engine:Label text="球の生成" />
+        </engine:VisualElement>
+        <engine:ScrollView horizontal-scroller-visibility="Hidden" name="sphere-generator__scroll-view">
+            <engine:VisualElement name="general-setting" class="setting-block">
+                <SpherePainting.SliderInt label="シード値" value="42" name="generator-seed-slider-int" fill="true" low-value="1" high-value="100000" class="setting-variable slider" />
+                <SpherePainting.SliderInt label="球の数" value="42" name="sphere-count-slider-int" fill="true" high-value="1000" low-value="1" class="setting-variable slider" />
+            </engine:VisualElement>
+            <engine:Foldout text="生成領域" name="generation-bounds-foldout" class="setting-block">
+                <engine:Vector3Field label="サイズ" name="generation-bounds-size-vector3-field" class="setting-variable" />
+                <engine:Vector3Field label="位置" name="generation-bounds-position-vector3-field" class="setting-variable" />
+            </engine:Foldout>
+            <engine:Foldout text="球の設定" name="sphere-setting-foldout" class="setting-block">
+                <engine:Toggle label="半径を個別に設定" name="set-radius-individual-toggle" class="setting-variable" />
+                <SpherePainting.MinMaxSlider name="radius-range-min-max-slider" label="半径" high-limit="40" value="0,10" low-limit="0" class="setting-variable min-max-slider" />
+                <engine:Foldout text="普通の球" name="normal-sphere-setting-foldout" value="false" class="setting-block">
+                    <SpherePainting.MinMaxSlider name="normal-sphere-radius-range-min-max-slider" label="半径" high-limit="40" low-limit="0" class="setting-variable min-max-slider default-sphere-setting" />
+                </engine:Foldout>
+                <engine:Foldout text="共通部分の球" name="cap-sphere-setting-foldout" value="false" class="setting-block">
+                    <SpherePainting.MinMaxSlider name="cap-sphere-radius-range-min-max-slider" label="半径" high-limit="40" low-limit="0" class="setting-variable min-max-slider" />
+                    <SpherePainting.MinMaxSlider name="cap-sphere-operation-target-radius-range-min-max-slider" label="演算対象の半径" high-limit="2" low-limit="0" value="0,0.5" class="setting-variable min-max-slider" />
+                    <SpherePainting.MinMaxSlider name="cap-sphere-operation-target-count-range-min-max-slider" label="演算対象の数" high-limit="50" m_-is-integer="true" low-limit="1" class="setting-variable min-max-slider" />
+                </engine:Foldout>
+                <engine:Foldout text="差集合の球" name="difference-sphere-setting-foldout" value="false" class="setting-block">
+                    <SpherePainting.MinMaxSlider name="difference-sphere-radius-range-min-max-slider" label="半径" high-limit="40" low-limit="0" class="setting-variable min-max-slider difference-sphere-setting" />
+                    <SpherePainting.MinMaxSlider name="difference-sphere-operation-target-radius-range-min-max-slider" label="演算対象の半径" high-limit="2" low-limit="0" value="0,0.5" class="setting-variable min-max-slider" />
+                    <SpherePainting.MinMaxSlider name="difference-sphere-operation-target-count-range-min-max-slider" label="演算対象の数" high-limit="50" m_-is-integer="true" low-limit="1" class="setting-variable min-max-slider" />
+                </engine:Foldout>
+                <engine:Foldout text="球の生成割合" name="sphere-weights-setting-foldout" class="setting-block">
+                    <SpherePainting.Slider label="普通の球" value="42" name="normal-sphere-weight-slider" fill="true" high-value="1" low-value="0" class="slider setting-variable" />
+                    <SpherePainting.Slider label="共通部分の球" value="42" high-value="1" name="cap-sphere-weight-slider" fill="true" low-value="0" class="slider setting-variable" />
+                    <SpherePainting.Slider label="差集合の球" value="42" high-value="1" name="difference-sphere-weight-slider" fill="true" low-value="0" class="slider setting-variable" />
+                </engine:Foldout>
+            </engine:Foldout>
+        </engine:ScrollView>
+    </engine:VisualElement>
+</engine:UXML>

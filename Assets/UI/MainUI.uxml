@@ -1,0 +1,38 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:Template name="Viewport" src="project://database/Assets/UI/Viewport.uxml?fileID=9197481963319205126&amp;guid=c27dca8c01b92ae409b89f8f10ae01c4&amp;type=3#Viewport" />
+    <engine:Template name="SphereGeneratorSettingUI" src="project://database/Assets/UI/SphereDataCreatorSetting.uxml?fileID=9197481963319205126&amp;guid=6b068d6c897c77e42a1ed9f77d16111d&amp;type=3#SphereGeneratorSetting" />
+    <engine:Template name="SphereRenderSetting" src="project://database/Assets/UI/SphereRenderSetting.uxml?fileID=9197481963319205126&amp;guid=c07f0cea19bfcd7438d5206740eedb5d&amp;type=3#SphereRenderSetting" />
+    <engine:Template name="SceneRenderSetting" src="project://database/Assets/UI/SceneRenderSetting.uxml?fileID=9197481963319205126&amp;guid=672658f45ad96004c8a6d408b9fbda9c&amp;type=3#SceneRenderSetting" />
+    <engine:Template name="RenderingSetting" src="project://database/Assets/UI/RenderingSetting.uxml?fileID=9197481963319205126&amp;guid=e1782bde0270baa4bb3a5734fb5a306b&amp;type=3#RenderingSetting" />
+    <engine:Template name="CanvasSetting" src="project://database/Assets/UI/CanvasSetting.uxml?fileID=9197481963319205126&amp;guid=df5159b831a19244bba813c872380312&amp;type=3#CanvasSetting" />
+    <engine:Template name="FileExportSetting" src="project://database/Assets/UI/FileExportSetting.uxml?fileID=9197481963319205126&amp;guid=97b9ff90b5c21c6428914f3bf8a7bd72&amp;type=3#FileExportSetting" />
+    <Style src="project://database/Assets/UI/SpherePainting.uss?fileID=7433441132597879392&amp;guid=a5443fa628d36ed4dabe726d802fd4d4&amp;type=3#SpherePainting" />
+    <Style src="project://database/Assets/UI/Viewport.uss?fileID=7433441132597879392&amp;guid=24388bbe328a5d549985b8c633bd0c12&amp;type=3#Viewport" />
+    <engine:VisualElement name="root" style="flex-direction: row; height: 100%;">
+        <engine:TwoPaneSplitView fixed-pane-initial-dimension="1350" name="TwoPaneSplitView" class="unity-two-pane-split-view">
+            <engine:Instance template="Viewport" name="viewport" />
+            <engine:VisualElement name="sidebar" class="sidebar" style="flex-direction: row;">
+                <engine:TabView name="sidebar-tab-view" style="width: 100%;">
+                    <engine:Tab name="sphere-generator-tab" icon-image="project://database/Assets/UI/Icons/SphereGeneratorIcon.png?fileID=2800000&amp;guid=8f0ae2de2e2ac2f4d96f640ce2295238&amp;type=3#SphereGeneratorIcon" tooltip="球の生成">
+                        <engine:Instance template="SphereGeneratorSettingUI" name="sphere-generator-content" />
+                    </engine:Tab>
+                    <engine:Tab name="sphere-render-setting-tab" icon-image="project://database/Assets/UI/Icons/SphereRenderingIcon.png?fileID=2800000&amp;guid=0305f0bc8e88a824ca0bb269cd50b5f3&amp;type=3#SphereRenderingIcon" tooltip="球のレンダリング">
+                        <engine:Instance template="SphereRenderSetting" />
+                    </engine:Tab>
+                    <engine:Tab name="scene-render-setting-tab" icon-image="project://database/Assets/UI/Icons/SceneRenderSettingIcon.png?fileID=2800000&amp;guid=8f885341b0cf7d042a6e728781afd036&amp;type=3#SceneRenderSettingIcon">
+                        <engine:Instance template="SceneRenderSetting" />
+                    </engine:Tab>
+                    <engine:Tab name="rendering-setting-tab" icon-image="project://database/Assets/UI/Icons/RenderingIcon.png?fileID=2800000&amp;guid=5ec8548d8851d3b4b879e01ffbf5048b&amp;type=3#RenderingIcon" tooltip="レンダリング" style="height: 100%; width: 100%;">
+                        <engine:Instance template="RenderingSetting" />
+                    </engine:Tab>
+                    <engine:Tab name="canvas-setting-tab" icon-image="project://database/Assets/UI/Icons/CanvasModeIcon.png?fileID=2800000&amp;guid=6d9510c8227264c4daf1111eb8e81b9f&amp;type=3#CanvasModeIcon" tooltip="キャンバス">
+                        <engine:Instance template="CanvasSetting" />
+                    </engine:Tab>
+                    <engine:Tab label="Tab" name="file-export-setting-tab" icon-image="project://database/Assets/UI/Icons/FileExportSettingIcon.png?fileID=2800000&amp;guid=2474c1c3f3885cc4ab7c840dc5007b57&amp;type=3#FileExportSettingIcon">
+                        <engine:Instance template="FileExportSetting" />
+                    </engine:Tab>
+                </engine:TabView>
+            </engine:VisualElement>
+        </engine:TwoPaneSplitView>
+    </engine:VisualElement>
+</engine:UXML>

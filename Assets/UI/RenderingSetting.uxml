@@ -1,0 +1,34 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/SpherePainting.uss?fileID=7433441132597879392&amp;guid=a5443fa628d36ed4dabe726d802fd4d4&amp;type=3#SpherePainting" />
+    <engine:VisualElement name="render-setting" class="sidebar-content-container">
+        <engine:VisualElement name="render-setting__header" class="header">
+            <engine:Label text="レンダリング" />
+        </engine:VisualElement>
+        <engine:ScrollView name="rendering-setting__scroll-view" horizontal-scroller-visibility="Hidden">
+            <engine:Foldout text="ビューポート" value="false" class="setting-block">
+                <engine:Vector2IntField label="解像度（px）" value="1024,1024" name="viewport-resolution-vector2-int-field" class="setting-variable" />
+                <engine:Toggle label="タイルベースレンダリングを有効にする" name="viewport-enable-tile-base-rendering-toggle" class="setting-variable" />
+                <engine:Vector2IntField label="タイルの大きさ（px）" name="viewport-tile-size-vector2-int-field" class="setting-variable" />
+                <SpherePainting.SliderInt label="サンプル数" value="1" high-value="512" low-value="1" name="viewport-sample-count-slider-int" fill="true" class="slider setting-variable" />
+            </engine:Foldout>
+            <engine:Foldout text="レンダー" class="setting-block">
+                <engine:Vector2IntField label="解像度（px）" value="1024,1024" name="render-resolution-vector2-int-field" class="setting-variable" />
+                <SpherePainting.SliderInt label="サンプル数" value="1" high-value="512" low-value="1" name="render-sample-count-slider-int" fill="true" class="slider setting-variable" />
+                <engine:Button text="レンダリング" name="rendering-button" class="setting-variable button" style="height: 30px;" />
+            </engine:Foldout>
+            <engine:Foldout text="カメラ" name="camera-setting" class="setting-block">
+                <engine:Foldout text="位置と回転" name="camera-transform-foldout" class="setting-block">
+                    <engine:Vector3Field label="位置" name="rendering-camera-position-vector3-field" class="setting-variable" />
+                    <engine:Vector3Field label="回転" name="rendering-camera-rotation-vector3-field" class="setting-variable" />
+                    <engine:VisualElement class="setting-variable" style="height: 40px;">
+                        <engine:Button text="ビューポートのカメラに合わせる" name="set-camera-transform-to-viewport-camera-button" class="button" style="margin-top: 0;" />
+                        <engine:Button text="位置と回転をリセット" name="reset-camera-transform-button" class="setting-variable button button-group" style="margin-top: 0;" />
+                    </engine:VisualElement>
+                </engine:Foldout>
+                <engine:Toggle label="平行投影" name="is-orthographic-toggle" class="setting-variable" />
+                <SpherePainting.UnitSlider name="field-of-view-unit-slider" fill="true" UnitSuffix="°" label="視野角" class="slider setting-variable" />
+                <SpherePainting.Slider label="平行投影のサイズ" value="42" high-value="100" fill="true" name="orthographic-size-slider" class="setting-variable slider" />
+            </engine:Foldout>
+        </engine:ScrollView>
+    </engine:VisualElement>
+</engine:UXML>

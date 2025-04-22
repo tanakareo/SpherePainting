@@ -1,0 +1,41 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/SpherePainting.uss?fileID=7433441132597879392&amp;guid=a5443fa628d36ed4dabe726d802fd4d4&amp;type=3#SpherePainting" />
+    <engine:VisualElement name="canvas-setting" class="sidebar-content-container">
+        <engine:VisualElement name="canvas-setting__header" class="header">
+            <engine:Label text="キャンバス" />
+        </engine:VisualElement>
+        <engine:ScrollView name="canvas-setting__scroll-view">
+            <engine:VisualElement name="general-setting" class="setting-block">
+                <engine:DropdownField label="形" name="canvas-shape-type-dropdown-field" choices="テスト1,テスト2" class="dropdown setting-variable" />
+                <SpherePainting.UnitSlider name="canvas-depth-unit-slider" unit="cm" fill="true" label="奥行き" show-input-field="false" class="slider setting-variable" />
+                <engine:Foldout text="大きさ" class="setting-block">
+                    <SpherePainting.UnitSlider label="横" fill="true" name="canvas-width-unit-slider" class="setting-variable slider" />
+                    <SpherePainting.UnitSlider fill="true" label="縦" name="canvas-height-unit-slider" class="setting-variable slider" />
+                    <engine:Toggle label="縦横比を固定" name="canvas-preserve-aspect-ratio-toggle" value="false" class="setting-variable" />
+                </engine:Foldout>
+            </engine:VisualElement>
+            <engine:Foldout text="レイヤー" class="setting-block">
+                <engine:Foldout text="フィルター" name="layer-filter-foldout" value="false" class="setting-block">
+                    <engine:Toggle label="フィルターを有効にする" name="layer-filtering-toggle" class="setting-variable" />
+                    <SpherePainting.SliderInt label="層の番号" value="42" high-value="100" name="active-filtered-layer-index-slider-int" low-value="0" fill="true" class="slider setting-variable" />
+                </engine:Foldout>
+                <engine:Foldout text="シャッフル" value="false" class="setting-block">
+                    <engine:Toggle label="シャッフルを有効にする" name="canvas-layer-shuffle-toggle" class="setting-variable" />
+                    <SpherePainting.SliderInt label="シード値" name="canvas-layer-shuffle-seed-slider-int" high-value="100000" low-value="1" fill="true" class="slider setting-variable" />
+                </engine:Foldout>
+            </engine:Foldout>
+            <engine:Foldout text="テクスチャマッピング" value="false" class="setting-block">
+                <SpherePainting.Slider label="水平方向のオフセット" high-value="1" value="0.5" low-value="0" fill="true" name="canvas-texture-horizontal-offset-slider" class="slider setting-variable" />
+                <SpherePainting.Slider label="垂直方向のオフセット" high-value="1" value="0.5" low-value="0" fill="true" name="canvas-texture-vertical-offset-slider" class="setting-variable slider" />
+                <SpherePainting.Slider fill="true" label="拡大" low-value="1" high-value="10" name="canvas-texture-scale-slider" class="slider setting-variable" />
+            </engine:Foldout>
+            <engine:Foldout text="質感" value="false" class="setting-block">
+                <engine:Foldout text="キャンバスの色" value="false" class="setting-block">
+                    <SpherePainting.SliderInt fill="true" high-value="255" low-value="0" value="0" label="色相" name="canvas-base-color-hue-slider-int" class="setting-variable slider" />
+                    <SpherePainting.SliderInt fill="true" high-value="255" low-value="0" value="0" label="彩度" name="canvas-base-color-saturation-slider-int" class="setting-variable slider" />
+                    <SpherePainting.SliderInt fill="true" high-value="255" low-value="0" value="0" label="明度" name="canvas-base-color-value-slider-int" class="setting-variable slider" />
+                </engine:Foldout>
+            </engine:Foldout>
+        </engine:ScrollView>
+    </engine:VisualElement>
+</engine:UXML>

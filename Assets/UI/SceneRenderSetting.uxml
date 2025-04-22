@@ -1,0 +1,24 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/SpherePainting.uss?fileID=7433441132597879392&amp;guid=a5443fa628d36ed4dabe726d802fd4d4&amp;type=3#SpherePainting" />
+    <engine:VisualElement name="scene-render-setting" class="sidebar-content-container">
+        <engine:VisualElement name="scene-render-setting__header" class="header">
+            <engine:Label text="シーンのレンダリング" />
+        </engine:VisualElement>
+        <engine:ScrollView name="scene-render-setting__scroll-view">
+            <engine:Foldout text="背景" name="background-foldout" class="setting-block">
+                <engine:Toggle label="背景を表示" name="display-background-toggle" class="setting-variable" />
+                <SpherePainting.SliderInt label="色相" value="0" high-value="255" low-value="0" fill="true" name="background-color-hue-slider-int" class="slider setting-variable" />
+                <SpherePainting.SliderInt label="彩度" value="0" high-value="255" low-value="0" fill="true" name="background-color-saturation-slider-int" class="slider setting-variable" />
+                <SpherePainting.SliderInt label="明度" value="0" high-value="255" low-value="0" fill="true" name="background-color-value-slider-int" class="slider setting-variable" />
+                <SpherePainting.SliderInt label="不透明度" value="0" high-value="255" low-value="0" fill="true" name="background-color-opacity-slider-int" class="slider setting-variable" />
+            </engine:Foldout>
+            <engine:Foldout text="空間の歪み" name="spatial-distortion-foldout" class="setting-block">
+                <engine:Toggle label="空間の歪みを有効にする" name="spatial-distortion-toggle" class="setting-variable" />
+                <engine:FloatField label="Z軸回転" value="42.2" name="ray-rotation-around-z-axis-float-field" class="setting-variable" />
+                <engine:Vector2Field label="振幅" name="ray-amplitude-vector2-field" class="setting-variable" />
+                <engine:Vector2Field label="周波数" name="ray-frequency-vector2-field" class="setting-variable" />
+                <engine:Vector2Field label="オフセット" name="ray-phase-offset-vector2-field" class="setting-variable" />
+            </engine:Foldout>
+        </engine:ScrollView>
+    </engine:VisualElement>
+</engine:UXML>

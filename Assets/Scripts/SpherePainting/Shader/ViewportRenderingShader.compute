@@ -1,0 +1,642 @@
+#pragma kernel RenderPreview
+#pragma kernel RenderSphereVolume
+#include "ColorBlend.hlsl"
+
+#define INFINITY 1e9
+#define EPS 0.001
+#define MAX_ITERATIONS 500
+#define MAX_DISTANCE 1000
+#define MAX_SCENE_INFO_COUNT 20
+
+RWTexture2D<float4> _Result;
+float4x4 _CameraToWorld;
+float4x4 _CameraInverseProjection;
+int _CurrentSample;
+float2 _PixelOffset;
+bool _IsOrthographic;
+
+bool _DisplayBackFace;
+float _SphereBlendStrength;
+float _OperationTargetBlendStrength;
+float _SphereMaterialBlendStrength;
+float _OperationTargetMaterialBlendStrength;
+float _OperationSmoothness;
+float _OperationMaterialSmoothness;
+
+float4 _BackgroundColor;
+bool _DisplayBackground;
+int _NumSpheres;
+StructuredBuffer<int> _SphereLayerIndices;
+bool _IsBottomLayer;
+
+bool _IsSpatialDistortionEnabled;
+float _RayRotationAroundZAxis;
+float2 _RayAmplitude;
+float2 _RayFrequency;
+float2 _RayPhaseOffset;
+
+int2 _TileOffset;
+int2 _Resolution;
+
+int _RenderTargetLayerIndex;
+int _RenderTargetSphereIndex;
+int _RenderTargetDepth;
+
+RWStructuredBuffer<int> _HitCount;
+
+struct Sphere
+{
+    float3 position;
+    float radius;
+    int operation;
+    int operationTargetCount;
+    int operationTargetStartIndex;
+};
+
+struct OperationTargetSphere
+{
+    float3 offset;
+    float radius;
+    int materialIndex;
+    int operationAreaMaterialIndex;
+};
+
+struct Material
+{
+    float4 color;
+    int blendMode;
+};
+
+struct SceneInfo
+{
+    float distance;
+    Material material;
+    int layerIndex;
+    int sphereIndex;
+};
+
+struct Ray
+{
+    float3 origin;
+    float3 direction;
+};
+
+struct RayHit
+{
+    SceneInfo sceneInfo;
+    float3 normal;
+    float lastRadius;
+    bool isFrontFace;
+};
+
+StructuredBuffer<Sphere> _Spheres;
+StructuredBuffer<OperationTargetSphere> _OperationTargetSpheres;
+StructuredBuffer<Material> _SphereMaterials;
+
+inline Material CreateMaterial()
+{
+    return (Material)0;
+}
+
+Material Lerp(Material a, Material b, float t)
+{
+    Material result = CreateMaterial();
+    result.color = lerp(a.color, b.color, t);
+    result.blendMode = lerp(a.blendMode, b.blendMode, step(0.5, t));
+    return result;
+}
+
+SceneInfo CreateSceneInfo()
+{
+    SceneInfo info;
+    info.distance = INFINITY;
+    info.material = CreateMaterial();
+    info.layerIndex = 0;
+    info.sphereIndex = 0;
+    return info;
+}
+
+Ray CreateRay(float3 origin, float3 direction)
+{
+    Ray ray;
+    ray.origin = origin;
+    ray.direction = direction;
+    return ray;
+}
+
+Ray CreateCameraRay(float2 uv)
+{
+    float3 origin, direction;
+
+    if(_IsOrthographic)
+    {
+        origin = mul(_CameraInverseProjection, float4(uv, -1.0, 1.0)).xyz;
+        origin = mul(_CameraToWorld, float4(origin, 1.0)).xyz;
+        direction = mul(_CameraToWorld, float4(0.0, 0.0, -1.0, 0.0)).xyz;
+        direction = normalize(direction);
+    }
+    else
+    {
+        origin = mul(_CameraToWorld, float4(0.0, 0.0, 0.0, 1.0)).xyz;
+        // vec3(uv.x, uv.y, 0.0)をプロジェクション座標系からビュー座標系(カメラ座標系)に変換
+        direction = mul(_CameraInverseProjection, float4(uv, 0.0, 1.0)).xyz;
+        // 平行移動成分を含まないのでwは0.0
+        direction = mul(_CameraToWorld, float4(direction, 0.0)).xyz;
+        direction = normalize(direction);
+    }
+    return CreateRay(origin, direction);
+}
+
+float2x2 Rot2D(float angle)
+{
+    float c = cos(angle);
+    float s = sin(angle);
+    
+    return float2x2(
+        c, -s,
+        s,  c
+    );
+}
+
+float3 RayAt(Ray ray, float t)
+{
+    float3 position = ray.origin + ray.direction * t;
+    
+    if(_IsSpatialDistortionEnabled)
+    {
+        position.x += sin((t + _RayPhaseOffset.x) * _RayFrequency.x * 0.1) * _RayAmplitude.x * 0.1;
+        position.y += sin((t + _RayPhaseOffset.y) * _RayFrequency.y * 0.1) * _RayAmplitude.y * 0.1;
+        position.xy = mul(Rot2D(t * _RayRotationAroundZAxis * 0.01), position.xy);
+    }
+    
+    return position;
+}
+
+// https://timcoster.com/2020/02/13/raymarching-shader-pt3-smooth-blending-operators/
+float SmoothIntersectSDF(float distA, float distB, float k, inout float h) 
+{
+    
+    h = saturate(0.5 - 0.5*(distA-distB)/k);
+    return lerp(distA, distB, h ) + k*h*(1.-h);
+}
+
+float SmoothUnionSDF(float distA, float distB, float k, inout float h)
+{
+    h = saturate(0.5 + 0.5*(distA-distB)/k);
+    return lerp(distA, distB, h) - k*h*(1.-h);
+}
+
+float SmoothDifferenceSDF(float distA, float distB, float k, inout float h)
+{
+    h = saturate(0.5 - 0.5*(distB+distA)/k);
+    return lerp(distA, -distB, h ) + k*h*(1.-h);
+}
+
+SceneInfo BlendSceneInfo(SceneInfo a, SceneInfo b, float blendStrength, float materialBlendStrength, inout float h)
+{
+    SceneInfo blendSceneInfo = CreateSceneInfo();
+    blendSceneInfo.distance = SmoothUnionSDF(a.distance, b.distance, blendStrength, h);
+    h = saturate(h / materialBlendStrength);
+    blendSceneInfo.material = Lerp(a.material, b.material, h);
+    blendSceneInfo.layerIndex = h < 0.5 ? a.layerIndex : b.layerIndex;
+    blendSceneInfo.sphereIndex = h < 0.5 ? a.sphereIndex : b.sphereIndex;
+    return blendSceneInfo;
+}
+
+SceneInfo CombineSceneInfo(SceneInfo sceneInfoA, SceneInfo sceneInfoB, int operation)
+{
+    SceneInfo combinedSceneInfo = CreateSceneInfo();
+    float h;
+    
+    // Cap
+    if(operation == 1)
+    {
+        combinedSceneInfo.distance = SmoothIntersectSDF(sceneInfoA.distance, sceneInfoB.distance, _OperationSmoothness, h);
+    }
+    // Difference
+    else
+    {
+        combinedSceneInfo.distance = SmoothDifferenceSDF(sceneInfoA.distance, sceneInfoB.distance, _OperationSmoothness, h);
+    }
+    h = saturate(h / _OperationMaterialSmoothness);
+    combinedSceneInfo.material = Lerp(sceneInfoA.material, sceneInfoB.material, h);
+    combinedSceneInfo.layerIndex = h < 0.5 ? sceneInfoA.layerIndex : sceneInfoB.layerIndex;
+    combinedSceneInfo.sphereIndex = h < 0.5 ? sceneInfoA.sphereIndex : sceneInfoB.sphereIndex;
+
+    return combinedSceneInfo;
+}
+
+float BlendDistance(float a, float b, float blendStrength)
+{
+    float h;
+    float distance = SmoothUnionSDF(a, b, blendStrength, h);
+    return distance;
+}
+
+float GetSphereDistance(float3 pos, float3 center, float radius)
+{
+    return length(pos - center) - radius;
+}
+
+float GetSpheresDistance(float3 pos)
+{
+    float closestDistance = GetSphereDistance(pos, _Spheres[0].position, _Spheres[0].radius);
+    for(int i = 1; i < _NumSpheres; ++i)
+    {
+        float distance = GetSphereDistance(pos, _Spheres[i].position, _Spheres[i].radius);
+        closestDistance = BlendDistance(closestDistance, distance, _SphereBlendStrength);
+    }
+    return closestDistance;
+}
+
+SceneInfo GetOperationTargetSceneInfo(float3 pos, int sphereIndex)
+{
+    Sphere sphere = _Spheres[sphereIndex];
+    int layerIndex = _SphereLayerIndices[sphereIndex];
+
+    // 演算対象の球の和集合
+    int sphereStartIndex = sphere.operationTargetStartIndex;
+    OperationTargetSphere operationTargetSphere = _OperationTargetSpheres[sphereStartIndex];
+    SceneInfo targetSceneInfo = CreateSceneInfo();
+    targetSceneInfo.material = _SphereMaterials[operationTargetSphere.materialIndex];
+    targetSceneInfo.sphereIndex = sphereIndex;
+    targetSceneInfo.layerIndex = layerIndex;
+    targetSceneInfo.distance = GetSphereDistance(pos, sphere.position + operationTargetSphere.offset, operationTargetSphere.radius);
+    SceneInfo currentTargetSceneInfo = CreateSceneInfo();
+    for(int i = 1; i < sphere.operationTargetCount; ++i)
+    {
+        // 現在の演算対象の球を求める
+        operationTargetSphere = _OperationTargetSpheres[sphereStartIndex + i];
+        currentTargetSceneInfo.material = _SphereMaterials[operationTargetSphere.materialIndex];
+        currentTargetSceneInfo.sphereIndex = sphereIndex;
+        currentTargetSceneInfo.layerIndex = layerIndex;
+        currentTargetSceneInfo.distance = GetSphereDistance(pos, sphere.position + operationTargetSphere.offset, operationTargetSphere.radius);
+        
+        float h;
+        targetSceneInfo = BlendSceneInfo(targetSceneInfo, currentTargetSceneInfo, _OperationTargetBlendStrength, _OperationTargetMaterialBlendStrength, h);
+    }
+    
+    return targetSceneInfo;
+}
+
+SceneInfo GetOperatedSphereSceneInfo(float3 pos, int sphereIndex)
+{
+    int layerIndex = _SphereLayerIndices[sphereIndex];
+
+    Sphere sphere = _Spheres[sphereIndex];
+    SceneInfo sphereSceneInfo = CreateSceneInfo();
+    sphereSceneInfo.material = _SphereMaterials[sphereIndex];
+    sphereSceneInfo.sphereIndex = sphereIndex;
+    sphereSceneInfo.distance = GetSphereDistance(pos, sphere.position, sphere.radius);
+    sphereSceneInfo.layerIndex = layerIndex;
+
+    if(sphere.operation == 0 || sphere.operationTargetCount == 0) return sphereSceneInfo;
+
+    // 演算対象の球の和集合
+    int sphereStartIndex = sphere.operationTargetStartIndex;
+    OperationTargetSphere operationTargetSphere = _OperationTargetSpheres[sphereStartIndex];
+    SceneInfo targetSceneInfo = CreateSceneInfo();
+    targetSceneInfo.material = _SphereMaterials[operationTargetSphere.operationAreaMaterialIndex];
+    targetSceneInfo.sphereIndex = sphereIndex;
+    targetSceneInfo.layerIndex = layerIndex;
+    targetSceneInfo.distance = GetSphereDistance(pos, sphere.position + operationTargetSphere.offset, operationTargetSphere.radius);
+    SceneInfo currentTargetSceneInfo = CreateSceneInfo();
+    for(int i = 1; i < sphere.operationTargetCount; ++i)
+    {
+        // 現在の演算対象の球を求める
+        operationTargetSphere = _OperationTargetSpheres[sphereStartIndex + i];
+        currentTargetSceneInfo.material = _SphereMaterials[operationTargetSphere.operationAreaMaterialIndex];
+        currentTargetSceneInfo.sphereIndex = sphereIndex;
+        currentTargetSceneInfo.layerIndex = layerIndex;
+        currentTargetSceneInfo.distance = GetSphereDistance(pos, sphere.position + operationTargetSphere.offset, operationTargetSphere.radius);
+        
+        float h;
+        targetSceneInfo = BlendSceneInfo(targetSceneInfo, currentTargetSceneInfo, _OperationTargetBlendStrength, _OperationTargetMaterialBlendStrength, h);
+    }
+    return CombineSceneInfo(sphereSceneInfo, targetSceneInfo, sphere.operation);
+}
+
+SceneInfo GetSceneInfo(float3 pos, bool renderOperationTargets)
+{
+    SceneInfo closestSceneInfo = CreateSceneInfo();
+
+    if(renderOperationTargets)
+    {
+        int startIndex = -1;
+        for(int i = 0; i < _NumSpheres; ++i)
+        {
+            Sphere sphere = _Spheres[i];
+            if(sphere.operation == 0 || sphere.operationTargetCount == 0) continue;
+            startIndex = i;
+            closestSceneInfo = GetOperationTargetSceneInfo(pos, i);
+            break;
+        }
+        
+        if(startIndex >= 0)
+        {
+            for(int j = startIndex + 1; j < _NumSpheres; ++j)
+            {
+                Sphere sphere = _Spheres[j];
+                if(sphere.operation == 0 || sphere.operationTargetCount == 0) continue;
+                SceneInfo currentSceneInfo = GetOperationTargetSceneInfo(pos, j);
+                float h;
+                closestSceneInfo = BlendSceneInfo(closestSceneInfo, currentSceneInfo, _SphereBlendStrength, _SphereMaterialBlendStrength, h);
+            }
+        }
+    }
+    else
+    {
+        closestSceneInfo = GetOperatedSphereSceneInfo(pos, 0);
+        for(int i = 1; i < _NumSpheres; ++i)
+        {
+            SceneInfo currentSceneInfo = GetOperatedSphereSceneInfo(pos, i);
+            float h;
+            closestSceneInfo = BlendSceneInfo(closestSceneInfo, currentSceneInfo, _SphereBlendStrength, _SphereMaterialBlendStrength, h);
+        }
+    }
+    return closestSceneInfo;
+}
+
+float CombineDistance(float a, float b, int operation)
+{
+    float combinedDistance = 0.0;
+    float h;
+    // Cap
+    if(operation == 1)
+    {
+        combinedDistance = SmoothIntersectSDF(a, b, _OperationSmoothness, h);
+    }
+    // Difference
+    else
+    {
+        combinedDistance = SmoothDifferenceSDF(a, b, _OperationSmoothness, h);
+    }
+
+    return combinedDistance;
+}
+
+float GetOperationTargetDistance(float3 pos, int sphereIndex)
+{
+    Sphere sphere = _Spheres[sphereIndex];
+
+    int sphereStartIndex = sphere.operationTargetStartIndex;
+    OperationTargetSphere operationTargetSphere = _OperationTargetSpheres[sphereStartIndex];
+    float operationTargetDistance = GetSphereDistance(pos, sphere.position + operationTargetSphere.offset, operationTargetSphere.radius);
+    for(int i = 1; i < sphere.operationTargetCount; ++i)
+    {
+        operationTargetSphere = _OperationTargetSpheres[sphereStartIndex + i];
+        float currentDistance = GetSphereDistance(pos, sphere.position + operationTargetSphere.offset, operationTargetSphere.radius);
+        operationTargetDistance = BlendDistance(operationTargetDistance, currentDistance, _OperationTargetBlendStrength);
+    }
+    
+    return operationTargetDistance;
+}
+
+float GetOperatedSphereDistance(float3 pos, int sphereIndex)
+{
+    Sphere sphere = _Spheres[sphereIndex];
+    float sphereDistance = GetSphereDistance(pos, sphere.position, sphere.radius);
+    if(sphere.operation == 0 || sphere.operationTargetCount == 0) return sphereDistance;
+    float operationTargetDistance = GetOperationTargetDistance(pos, sphereIndex);
+    return CombineDistance(sphereDistance, operationTargetDistance, sphere.operation);
+}
+
+float GetSceneDistance(float3 pos, bool renderOperationTargets)
+{
+    float closestDistance = INFINITY;
+    if(renderOperationTargets)
+    {
+        int startIndex = -1;
+        for(int i = 0; i < _NumSpheres; ++i)
+        {
+            Sphere sphere = _Spheres[i];
+            if(sphere.operation == 0 || sphere.operationTargetCount == 0) continue;
+            closestDistance = GetOperationTargetDistance(pos, i);
+            startIndex = i;
+            break;
+        }
+
+        if(startIndex >= 0)
+        {
+            for(int j = startIndex + 1; j < _NumSpheres; ++j)
+            {
+                Sphere sphere = _Spheres[j];
+                if(sphere.operation == 0 || sphere.operationTargetCount == 0) continue;
+                float distance = GetOperationTargetDistance(pos, j);
+                closestDistance = BlendDistance(closestDistance, distance, _SphereBlendStrength);
+            }
+        }
+    } 
+    else
+    {
+        closestDistance = GetOperatedSphereDistance(pos, 0);
+        for(int i = 1; i < _NumSpheres; ++i)
+        {
+            float distance = GetOperatedSphereDistance(pos, i);
+            closestDistance = BlendDistance(closestDistance, distance, _SphereBlendStrength);
+        }
+    }
+    return closestDistance;
+}
+
+float3 EstimateNormal(float3 pos, bool renderOperationTargets)
+{
+	float3 k = float3(1.0, -1.0, 0.0);
+	return normalize(k.xyy * GetSceneDistance(pos + (k.xyyz*EPS).xyz, renderOperationTargets)+
+					 k.yyx * GetSceneDistance(pos + (k.yyxz*EPS).xyz, renderOperationTargets)+
+					 k.yxy * GetSceneDistance(pos + (k.yxyz*EPS).xyz, renderOperationTargets)+
+					 k.xxx * GetSceneDistance(pos + (k.xxxz*EPS).xyz, renderOperationTargets));
+}
+
+RayHit Trace(Ray ray, bool renderOperationTargets)
+{
+    float t = 0;
+    float radius = INFINITY;
+    float3 currentPosition = ray.origin;
+    float epsilon = EPS * 0.1;
+    for(int i = 0; i < MAX_ITERATIONS; ++i)
+    {
+        currentPosition = RayAt(ray, t);
+        radius = abs(GetSceneDistance(currentPosition, renderOperationTargets));
+        if(radius < epsilon) break;
+        t += radius;
+        if(t > MAX_DISTANCE) break;
+    }
+
+    RayHit rayHit = (RayHit)0;
+    rayHit.sceneInfo = CreateSceneInfo();
+    rayHit.isFrontFace = false;
+    rayHit.lastRadius = radius;
+
+    if(radius < EPS)
+    {
+        rayHit.normal = EstimateNormal(currentPosition, renderOperationTargets);
+        rayHit.isFrontFace = dot(rayHit.normal, ray.direction) < 0;
+    }
+
+    if(rayHit.isFrontFace || _DisplayBackFace)
+    {
+        rayHit.sceneInfo = GetSceneInfo(currentPosition, renderOperationTargets);
+    }
+
+    rayHit.sceneInfo.distance = t;
+
+    return rayHit;
+}
+
+[numthreads(8,8,1)]
+void RenderPreview (uint3 id : SV_DispatchThreadID)
+{
+    float2 uv = float2((id.xy + _TileOffset + _PixelOffset) / _Resolution * 2.0 - 1.0);
+    
+    SceneInfo sceneInfos[MAX_SCENE_INFO_COUNT];
+    for(int l = 0; l < MAX_SCENE_INFO_COUNT; ++l) sceneInfos[l] = CreateSceneInfo();
+    int sceneInfoCount = 0;
+    Ray rays[2]; rays[0] = CreateCameraRay(uv); rays[1] = CreateCameraRay(uv);
+    float totalDistances[2]; totalDistances[0] = 0.0; totalDistances[1] = 0.0;
+    SceneInfo currentSceneInfos[2]; currentSceneInfos[0] = CreateSceneInfo(); currentSceneInfos[1] = CreateSceneInfo();
+    bool isFrontFaces[2]; isFrontFaces[0] = false; isFrontFaces[1] = false;
+    bool isFirstRay = true;
+    bool renderOperationTargets = false;
+    int renderTargetMask = 3;
+    bool isOperationTargetsOnTop = false;
+    for(int i = 0; i < MAX_ITERATIONS; ++i)
+    {
+        if(sceneInfoCount >= MAX_SCENE_INFO_COUNT) break;
+
+        for(int j = 0; j < 2; ++j)
+        {
+            if(!(renderTargetMask & 1 << j)) continue;
+            renderOperationTargets = j == 0;
+            
+            RayHit rayHit = Trace(rays[j], renderOperationTargets);
+            totalDistances[j] += rayHit.sceneInfo.distance;
+            currentSceneInfos[j] = rayHit.sceneInfo;
+            isFrontFaces[j] = rayHit.isFrontFace;
+            if(rayHit.sceneInfo.distance > MAX_DISTANCE) continue;
+
+            float3 offsetAlongNormal = rayHit.normal * 2.0 * max(rayHit.lastRadius, EPS);
+            offsetAlongNormal *= rayHit.isFrontFace ? -1 : 1;
+            totalDistances[j] += dot(rays[j].direction, offsetAlongNormal);
+            rays[j].origin = RayAt(rays[j], rayHit.sceneInfo.distance) + offsetAlongNormal;
+        }
+        // 裏面に関しては演算対象の球を優先して描画
+        isOperationTargetsOnTop = !_DisplayBackFace && !isFrontFaces[0] && !isFrontFaces[1];
+        // 0 : 演算対象の球
+        // 1 : 演算された球
+        // 距離が同じ場合は、演算された球を優先して描画
+        int top = isOperationTargetsOnTop ? 0 : 1;
+        int bottom = 1 - top;
+        int k = totalDistances[bottom] + EPS > totalDistances[top] ? top : bottom;
+        if(currentSceneInfos[k].distance > MAX_DISTANCE) break;
+        renderTargetMask = 1 << k;
+
+        if((isFrontFaces[k] || _DisplayBackFace) &&
+            (!isFirstRay || currentSceneInfos[k].layerIndex == _RenderTargetLayerIndex) &&
+            currentSceneInfos[k].material.color.w > 0.0)
+        {
+            if(k == 0 && GetSpheresDistance(rays[k].origin) < 0.0) continue;
+            isFirstRay = false;
+            sceneInfos[sceneInfoCount] = currentSceneInfos[k];
+            sceneInfoCount++;
+        }
+    }
+
+    float4 result = 0.0;
+    if(sceneInfoCount == 0)
+    {
+        if(_DisplayBackground) result = _BackgroundColor;
+    }
+    else
+    {
+        float4 layerBackdrop = _IsBottomLayer ? 0.0 : _BackgroundColor;
+        float4 backdrop = _BackgroundColor;
+        float layerOpacity = _IsBottomLayer ? _BackgroundColor.w : 0.0;
+        for(int i = sceneInfoCount - 1; i >= 0; --i)
+        {
+            Material material = sceneInfos[i].material;
+            float4 source = material.color;
+            backdrop = CompositeColor(backdrop, source, material.blendMode);
+            
+            if(sceneInfos[i].layerIndex <= _RenderTargetLayerIndex)
+            {
+                layerOpacity = layerOpacity * (1.0 - source.w) + source.w;
+                continue;
+            }
+            
+            layerBackdrop = backdrop;
+        }
+        result = backdrop;
+        result = InverseNormalBlend(result, layerBackdrop, layerOpacity);
+    }
+
+    _Result[id.xy] = lerp(_Result[id.xy], result, 1.0 / (_CurrentSample + 1.0));
+}
+
+[numthreads(8,8,1)]
+void RenderSphereVolume (uint3 id : SV_DispatchThreadID)
+{
+    float2 uv = float2((id.xy + _TileOffset + _PixelOffset) / _Resolution * 2.0 - 1.0);    
+
+    float4 result = 0.0;
+    int depthInLayer = 0;
+    Ray rays[2]; rays[0] = CreateCameraRay(uv); rays[1] = CreateCameraRay(uv);
+    float totalDistances[2]; totalDistances[0] = 0.0; totalDistances[1] = 0.0;
+    SceneInfo currentSceneInfos[2]; currentSceneInfos[0] = CreateSceneInfo(); currentSceneInfos[1] = CreateSceneInfo();
+    bool isFrontFaces[2]; isFrontFaces[0] = false; isFrontFaces[1] = false;
+    bool renderOperationTargets = false;
+    int renderTargetMask = 3;
+    bool isOperationTargetsOnTop = false;
+    for(int i = 0; i < MAX_ITERATIONS; ++i)
+    {
+        for(int j = 0; j < 2; ++j)
+        {
+            if(!(renderTargetMask & 1 << j)) continue;
+            renderOperationTargets = j == 0;
+
+            RayHit rayHit = Trace(rays[j], renderOperationTargets);
+            totalDistances[j] += rayHit.sceneInfo.distance;
+            currentSceneInfos[j] = rayHit.sceneInfo;
+            isFrontFaces[j] = rayHit.isFrontFace;
+            if(rayHit.sceneInfo.distance > MAX_DISTANCE) continue;
+    
+            float3 offsetAlongNormal = rayHit.normal * 2.0 * max(rayHit.lastRadius, EPS);
+            offsetAlongNormal *= rayHit.isFrontFace ? -1 : 1;
+            totalDistances[j] += dot(rays[j].direction, offsetAlongNormal);
+            rays[j].origin = RayAt(rays[j], rayHit.sceneInfo.distance) + offsetAlongNormal;
+        }
+
+        // 裏面に関しては演算対象の球を優先して描画
+        isOperationTargetsOnTop = !_DisplayBackFace && !isFrontFaces[0] && !isFrontFaces[1];
+        // 0 : 演算対象の球
+        // 1 : 演算された球
+        // 距離が同じ場合は、演算された球を優先して描画
+        int top = isOperationTargetsOnTop ? 0 : 1;
+        int bottom = 1 - top;
+        int k = totalDistances[bottom] + EPS > totalDistances[top] ? top : bottom;
+        if(currentSceneInfos[k].distance > MAX_DISTANCE) break;
+        renderTargetMask = 1 << k;
+        
+        if((isFrontFaces[k] || _DisplayBackFace) && currentSceneInfos[k].material.color.w > 0.0)
+        {
+            if(k == 0 && GetSpheresDistance(rays[0].origin) < 0.0) continue;
+
+            if(currentSceneInfos[k].sphereIndex != _RenderTargetSphereIndex)
+            {
+                if(depthInLayer > 0) break;
+            }
+            else
+            {
+                if(depthInLayer >= _RenderTargetDepth)
+                {
+                    result = currentSceneInfos[k].material.color;
+                    InterlockedAdd(_HitCount[0], 1);
+                    break;
+                }
+                depthInLayer++;
+            }
+        }
+    }
+    
+    _Result[id.xy] = lerp(_Result[id.xy], result, 1.0 / (_CurrentSample + 1.0));
+}
