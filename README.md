@@ -1,3 +1,4 @@
+SpherePaintingのUnityプロジェクトです。バージョンはUnity 6000.0.32f1です。
 ## SpherePainting
 このツールは、巴山竜来研究室（xMath Lab）と[山本雄基](https://yamamotoyuki.com/)さんとの共同プロジェクトで制作した絵画制作支援ツールです。
 <br />
