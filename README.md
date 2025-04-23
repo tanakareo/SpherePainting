@@ -2,9 +2,20 @@
 ## SpherePainting
 このツールは、巴山竜来研究室（xMath Lab）と[山本雄基](https://yamamotoyuki.com/)さんとの共同プロジェクトで制作した絵画制作支援ツールです。
 <br />
-<br />
 球をシーン上にランダムに配置し、そのプレビューやPNG画像への出力ができます。球の生成の仕方、球の色などを細かくパラメータで調節できます。
+<br />
+<br />
+![Image](https://github.com/user-attachments/assets/e42c6771-282e-46e8-88df-a01814c3e4d6)
+<br />
 画像作成の流れは[この動画](https://www.youtube.com/watch?v=HW7pB9QWP5I)を参照してください。
+<br />
+<br />
+![Image](https://github.com/user-attachments/assets/8736f574-4705-453f-8083-a722a040aca9)
+実際の展示を想定したプレビュー機能があります。キャンバスの大きさや奥行きなどを細かく設定できます。
+<br />
+<br />
+![Image](https://github.com/user-attachments/assets/3dc9b943-b2bb-45ac-855c-dc6df99aded4)
+PNG画像にエクスポートすることができ、SVGファイルの作成も自動でできます。
 ## ユーザーインターフェース
 ![Image](https://github.com/user-attachments/assets/a2216983-3db4-4eca-999e-b35ff3ec4d3c)
 <br />
