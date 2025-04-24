@@ -1,0 +1,389 @@
+{
+  "SphereDataCreatorData": {
+    "Seed": 1,
+    "SphereCount": 5,
+    "GenerationBoundsSize": {
+      "x": 20.0,
+      "y": 20.0,
+      "z": 20.0,
+      "normalized": {
+        "x": 0.577350259,
+        "y": 0.577350259,
+        "z": 0.577350259,
+        "magnitude": 1.0,
+        "sqrMagnitude": 0.99999994
+      },
+      "magnitude": 34.6410179,
+      "sqrMagnitude": 1200.0
+    },
+    "GenerationBoundsPosition": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "magnitude": 0.0,
+      "sqrMagnitude": 0.0
+    },
+    "SphereRadiusRange": {
+      "NORMAL": {
+        "x": 0.0,
+        "y": 5.0,
+        "normalized": {
+          "x": 0.0,
+          "y": 1.0,
+          "magnitude": 1.0,
+          "sqrMagnitude": 1.0
+        },
+        "magnitude": 5.0,
+        "sqrMagnitude": 25.0
+      },
+      "CAP": {
+        "x": 0.0,
+        "y": 5.0,
+        "normalized": {
+          "x": 0.0,
+          "y": 1.0,
+          "magnitude": 1.0,
+          "sqrMagnitude": 1.0
+        },
+        "magnitude": 5.0,
+        "sqrMagnitude": 25.0
+      },
+      "DIFFERENCE": {
+        "x": 0.0,
+        "y": 5.0,
+        "normalized": {
+          "x": 0.0,
+          "y": 1.0,
+          "magnitude": 1.0,
+          "sqrMagnitude": 1.0
+        },
+        "magnitude": 5.0,
+        "sqrMagnitude": 25.0
+      }
+    },
+    "OperationTargetRadiusRange": {
+      "CAP": {
+        "x": 0.2,
+        "y": 1.0,
+        "normalized": {
+          "x": 0.196116149,
+          "y": 0.9805807,
+          "magnitude": 1.0,
+          "sqrMagnitude": 1.0
+        },
+        "magnitude": 1.01980388,
+        "sqrMagnitude": 1.04
+      },
+      "DIFFERENCE": {
+        "x": 0.0,
+        "y": 0.8,
+        "normalized": {
+          "x": 0.0,
+          "y": 1.0,
+          "magnitude": 1.0,
+          "sqrMagnitude": 1.0
+        },
+        "magnitude": 0.8,
+        "sqrMagnitude": 0.640000045
+      }
+    },
+    "OperationTargetCountRange": {
+      "CAP": {
+        "x": 1,
+        "y": 2,
+        "magnitude": 2.236068,
+        "sqrMagnitude": 5
+      },
+      "DIFFERENCE": {
+        "x": 1,
+        "y": 5,
+        "magnitude": 5.09901953,
+        "sqrMagnitude": 26
+      }
+    },
+    "WeightedSphereOperations": [
+      {
+        "Value": 0,
+        "Weight": 0.333333343
+      },
+      {
+        "Value": 1,
+        "Weight": 0.333333343
+      },
+      {
+        "Value": 2,
+        "Weight": 0.333333343
+      }
+    ]
+  },
+  "SphereMaterialDataCreatorData": {
+    "Seed": 1,
+    "OperationAreaMaterialRandomnessRange": {
+      "x": 1.0,
+      "y": 1.0,
+      "normalized": {
+        "x": 0.707106769,
+        "y": 0.707106769,
+        "magnitude": 1.0,
+        "sqrMagnitude": 0.99999994
+      },
+      "magnitude": 1.41421354,
+      "sqrMagnitude": 2.0
+    },
+    "OperationTargetMaterialRandomnessRange": {
+      "x": 1.0,
+      "y": 1.0,
+      "normalized": {
+        "x": 0.707106769,
+        "y": 0.707106769,
+        "magnitude": 1.0,
+        "sqrMagnitude": 0.99999994
+      },
+      "magnitude": 1.41421354,
+      "sqrMagnitude": 2.0
+    },
+    "MaterialHueRange": {
+      "x": 0.0,
+      "y": 1.0,
+      "magnitude": 1.0,
+      "sqrMagnitude": 1.0
+    },
+    "MaterialSaturationRange": {
+      "x": 0.0,
+      "y": 1.0,
+      "magnitude": 1.0,
+      "sqrMagnitude": 1.0
+    },
+    "MaterialValueRange": {
+      "x": 0.0,
+      "y": 1.0,
+      "magnitude": 1.0,
+      "sqrMagnitude": 1.0
+    },
+    "MaterialOpacityRange": {
+      "x": 0.0,
+      "y": 1.0,
+      "magnitude": 1.0,
+      "sqrMagnitude": 1.0
+    },
+    "OperationTargetMaterialOpacityRange": {
+      "x": 0.0,
+      "y": 1.0,
+      "magnitude": 1.0,
+      "sqrMagnitude": 1.0
+    },
+    "TransparentOperationTargetRatio": 0.5,
+    "WeightedBlendModes": [
+      {
+        "Value": 0,
+        "Weight": 0.7
+      },
+      {
+        "Value": 3,
+        "Weight": 0.15
+      },
+      {
+        "Value": 1,
+        "Weight": 0.15
+      },
+      {
+        "Value": 2,
+        "Weight": 0.15
+      },
+      {
+        "Value": 4,
+        "Weight": 0.15
+      },
+      {
+        "Value": 5,
+        "Weight": 0.15
+      },
+      {
+        "Value": 6,
+        "Weight": 0.15
+      },
+      {
+        "Value": 7,
+        "Weight": 0.15
+      },
+      {
+        "Value": 8,
+        "Weight": 0.15
+      },
+      {
+        "Value": 9,
+        "Weight": 0.15
+      },
+      {
+        "Value": 10,
+        "Weight": 0.15
+      }
+    ]
+  },
+  "SceneRenderSettingData": {
+    "BackgroundHSVColor": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 0.0,
+      "magnitude": 0.0,
+      "sqrMagnitude": 0.0
+    },
+    "DisplayBackground": false,
+    "IsSpatialDistortionEnabled": false,
+    "RayRotationAroundZAxis": 0.0,
+    "RayAmplitude": {
+      "x": 0.0,
+      "y": 0.0,
+      "magnitude": 0.0,
+      "sqrMagnitude": 0.0
+    },
+    "RayFrequency": {
+      "x": 1.0,
+      "y": 1.0,
+      "normalized": {
+        "x": 0.707106769,
+        "y": 0.707106769,
+        "magnitude": 1.0,
+        "sqrMagnitude": 0.99999994
+      },
+      "magnitude": 1.41421354,
+      "sqrMagnitude": 2.0
+    },
+    "RayPhaseOffset": {
+      "x": 0.0,
+      "y": 0.0,
+      "magnitude": 0.0,
+      "sqrMagnitude": 0.0
+    }
+  },
+  "SphereRenderSettingData": {
+    "SphereBlendStrength": 0.0,
+    "OperationTargetBlendStrength": 0.0,
+    "SphereMaterialBlendStrength": 0.0,
+    "OperationTargetMaterialBlendStrength": 0.0,
+    "OperationSmoothness": 0.0,
+    "OperationMaterialSmoothness": 0.0
+  },
+  "RenderingCameraSettingData": {
+    "IsOrthographic": false,
+    "OrthographicSize": 5.0,
+    "FieldOfView": 50.0,
+    "CameraPosition": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -20.0,
+      "normalized": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": -1.0,
+        "magnitude": 1.0,
+        "sqrMagnitude": 1.0
+      },
+      "magnitude": 20.0,
+      "sqrMagnitude": 400.0
+    },
+    "CameraRotation": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "magnitude": 0.0,
+      "sqrMagnitude": 0.0
+    }
+  },
+  "FinalRenderingData": {
+    "Resolution": {
+      "x": 1024,
+      "y": 1024,
+      "magnitude": 1448.15466,
+      "sqrMagnitude": 2097152
+    },
+    "NumSamples": 4,
+    "IsTileBasedRenderingEnabled": false,
+    "TileSize": {
+      "x": 1024,
+      "y": 1024,
+      "magnitude": 1448.15466,
+      "sqrMagnitude": 2097152
+    }
+  },
+  "ViewportRenderingData": {
+    "Resolution": {
+      "x": 1024,
+      "y": 1024,
+      "magnitude": 1448.15466,
+      "sqrMagnitude": 2097152
+    },
+    "NumSamples": 1,
+    "IsTileBasedRenderingEnabled": false,
+    "TileSize": {
+      "x": 1024,
+      "y": 1024,
+      "magnitude": 1448.15466,
+      "sqrMagnitude": 2097152
+    }
+  },
+  "CanvasData": {
+    "Size": {
+      "x": 2.5,
+      "y": 2.5,
+      "normalized": {
+        "x": 0.707106769,
+        "y": 0.707106769,
+        "magnitude": 1.0,
+        "sqrMagnitude": 0.99999994
+      },
+      "magnitude": 3.535534,
+      "sqrMagnitude": 12.5
+    },
+    "Depth": 0.01,
+    "ShapeType": 0,
+    "NormalizedTextureOffset": {
+      "x": 0.5,
+      "y": 0.5,
+      "normalized": {
+        "x": 0.707106769,
+        "y": 0.707106769,
+        "magnitude": 1.0,
+        "sqrMagnitude": 0.99999994
+      },
+      "magnitude": 0.707106769,
+      "sqrMagnitude": 0.5
+    },
+    "TextureScaler": 1.0,
+    "IsLayerShuffleActive": false,
+    "LayerShuffleSeed": 1,
+    "IsLayerFilterActive": false,
+    "ActiveFilteredLayer": 0
+  },
+  "CanvasMaterialSettingData": {
+    "BaseHSVColor": {
+      "x": 0.34117642,
+      "y": 0.3607844,
+      "z": 1.0,
+      "normalized": {
+        "x": 0.3055774,
+        "y": 0.323139459,
+        "z": 0.8956581,
+        "magnitude": 1.0,
+        "sqrMagnitude": 1.0
+      },
+      "magnitude": 1.11649752,
+      "sqrMagnitude": 1.24656677
+    }
+  },
+  "GizmoDisplayData": {
+    "GizmoOpacity": {
+      "GENERATION_BOUNDS": 0.9019608,
+      "RENDERING_CAMERA": 0.698039234,
+      "GRID": 0.4,
+      "CANVAS_MASK": 1.0
+    },
+    "IsGizmoActive": {
+      "GENERATION_BOUNDS": true,
+      "RENDERING_CAMERA": true,
+      "GRID": true,
+      "CANVAS_MASK": false
+    }
+  }
+}
