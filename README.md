@@ -1,6 +1,6 @@
 絵画制作支援ツール「SpherePainting」のUnityプロジェクトです。バージョンはUnity 6000.0.32f1です。
 ## SpherePainting
-このツールは、巴山竜来研究室（xMath Lab）と[山本雄基](https://yamamotoyuki.com/)さんとの共同プロジェクトで制作した絵画制作支援ツールです。
+SpherePaintingは、巴山竜来研究室（xMath Lab）と[山本雄基](https://yamamotoyuki.com/)さんとの共同プロジェクトで制作した絵画制作支援ツールです。
 <br />
 球をシーン上にランダムに配置し、そのプレビューやPNG画像への出力ができます。球の生成の仕方、球の色などを細かくパラメータで調節できます。
 <br />
